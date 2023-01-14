@@ -487,6 +487,11 @@ export class Thermostats {
 
       // Only include mode on certain models
       switch (this.device.deviceModel) {
+        case 'Round': 
+        let mode = this.resideoMode[1]
+          this.debugLog(`Thermostat ${this.accessory.displayName} API doesn't support Auto mode in settings update. Using mode ${mode} instead`);
+          payload.mode = mode
+          break;
         case 'Unknown':
           this.debugLog(`Thermostat: ${this.accessory.displayName} didn't send TargetHeatingCoolingState,` + ` Model:  ${this.device.deviceModel}`);
           break;
