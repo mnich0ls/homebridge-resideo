@@ -873,11 +873,16 @@ export class Thermostats {
     this.TargetHeatingCoolingState = value;
 
     // Set the TargetTemperature value based on the selected mode
-    if (this.TargetHeatingCoolingState === this.platform.Characteristic.TargetHeatingCoolingState.HEAT) {
-      this.TargetTemperature = this.toCelsius(this.device.changeableValues!.heatSetpoint);
-    } else {
-      this.TargetTemperature = this.toCelsius(this.device.changeableValues!.coolSetpoint);
-    }
+    // TODO: Why do we need to set the target temp here if we're only changing the TargetHeatingCoolingState state?
+    // https://github.com/donavanbecker/homebridge-resideo/issues/777
+    // if (this.TargetHeatingCoolingState === this.platform.Characteristic.TargetHeatingCoolingState.HEAT) {
+    //   this.TargetTemperature = this.toCelsius(this.device.changeableValues!.heatSetpoint);
+    // } else {
+    //   this.TargetTemperature = this.toCelsius(this.device.changeableValues!.coolSetpoint);
+    // }
+    this.debugLog(`Thermostat: ${this.accessory.displayName} Set TargetHeatingCoolingState is ignoring setting the TargetTemperature` +
+    `which would have been: ${this.device.changeableValues!.heatSetpoint} for Heat mode, or ${this.device.changeableValues!.coolSetpoint}` +
+    `for Cool mode`)
     this.service.updateCharacteristic(this.platform.Characteristic.TargetTemperature, this.TargetTemperature);
     if (this.device.thermostat?.roompriority?.deviceType === 'Thermostat' && this.device.deviceModel === 'T9-T10') {
       this.doRoomUpdate.next();
